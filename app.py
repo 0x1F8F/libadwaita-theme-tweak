@@ -7,32 +7,25 @@ gi.require_version('Gtk','4.0')
 
 from gi.repository import Gtk,GLib
 
-def themes(theme_dir):
-    themes = []
-    for dir in theme_dir:
-        for theme in os.listdir(dir):
-            if os.path.isdir(theme):
-                themes.append(theme)
-    return themes
-
 
 class MainWindow(Gtk.ApplicationWindow):
-    def __themes__(self):
-        for dir in self.theme_dir:
-            for theme in os.listdir(dir):
-                if os.path.isdir(theme):
-                    self.themes.append(theme)
-
     def on_apply_clicked(self,button, theme):
         print(f"Apply button clicked for theme: {theme}")
-        if os.path.isdir(self.home_dir+'/.config/gtk-4.0'):
-            shutil.rmtree(self.home_dir+'/.config/gtk-4.0')
-        shutil.copytree(theme+'/gtk-4.0/',self.home_dir+'/.config/gtk-4.0')
-        print("Progress succeeded GTK 4.0")
-        if os.path.isdir(self.home_dir+'/.config/gtk-3.0'):
-            shutil.rmtree(self.home_dir+'/.config/gtk-3.0')
-        shutil.copytree(theme+'/gtk-3.0/',self.home_dir+'/.config/gtk-3.0')
-        print("Progress succeeded GTK 3.0")
+        try:
+            if os.path.isdir(self.home_dir+'/.config/gtk-4.0'):
+                if os.path.isdir(self.home_dir+'/.config/gtk-4.0'):
+                    shutil.rmtree(self.home_dir+'/.config/gtk-4.0')
+                shutil.copytree(theme+'/gtk-4.0/',self.home_dir+'/.config/gtk-4.0')
+                print("Progress succeeded GTK 4.0")
+            if os.path.isdir(self.home_dir+'/.config/gtk-3.0'):
+                if os.path.isdir(self.home_dir+'/.config/gtk-3.0'):
+                    shutil.rmtree(self.home_dir+'/.config/gtk-3.0')
+                shutil.copytree(theme+'/gtk-3.0/',self.home_dir+'/.config/gtk-3.0')
+            print("Progress succeeded GTK 3.0")
+            Gtk.AlertDialog(message="Theme Applied").show(parent=self)
+        except Exception as err:
+            print(f"CRITICAL: {err}")
+            Gtk.AlertDialog(message=str(err)).show(parent=self)
 
 
     def __init__(self,*args,**kwargs):
@@ -53,6 +46,7 @@ class MainWindow(Gtk.ApplicationWindow):
                 print(f"CRITICAL : {err}")
 
         print(self.themes,self.theme_dir)
+        self.set_title("Themes")
         self.set_default_size(800, 500)
 
         # Create a box layout
@@ -79,10 +73,6 @@ class MainWindow(Gtk.ApplicationWindow):
             box.set_margin_top(4)
             box.set_margin_bottom(4)
             listbox.append(box)
-
-
-
-
 
 class Application(Gtk.Application):
     def __init__(self,*args,**kwargs):
