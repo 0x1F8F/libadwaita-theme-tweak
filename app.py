@@ -33,7 +33,7 @@ class MainWindow(Gtk.ApplicationWindow):
         self.home_dir = os.getenv("HOME")
         self.user_theme_dir = [self.home_dir+"/.themes", self.home_dir+"/.local/share/themes"]
         self.root_theme_dir = ['/usr/share/themes','/usr/local/share/themes']
-        self.theme_dir = self.user_theme_dir+self.root_theme_dir if os.getuid()==0 else self.user_theme_dir
+        self.theme_dir = self.user_theme_dir+self.root_theme_dir
         self.themes = []
         print("THEME DIR: ",self.theme_dir)
 
